@@ -1,7 +1,6 @@
 # go src reading
 
-TODO
-- [ ] fmt.Print
+- [x] fmt.Print
+- [x] log.Print
 - [ ] strings
-- [ ] log.Printf
 

@@ -1,12 +1,20 @@
 # go src reading
 
+std
 - [x] fmt.Print
 - [x] log.Print
 - [x] strings.Builder, strings.Join
 - [ ] bufio
 
+internal
+- [ ] netpoll
+- [ ] memory
+
+third party
 - [x] gin
 - [ ] zap
+
+
 
 
 ```go

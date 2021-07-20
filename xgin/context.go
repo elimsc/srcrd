@@ -67,3 +67,24 @@ func (c *Context) Next() {
 func (c *Context) String(s string) {
 	c.Writer.WriteString(s)
 }
+
+// Set is used to store a new key/value pair exclusively for this context.
+// It also lazy initializes  c.Keys if it was not used previously.
+func (c *Context) Set(key string, value interface{}) {
+	c.mu.Lock()
+	if c.Keys == nil {
+		c.Keys = make(map[string]interface{})
+	}
+
+	c.Keys[key] = value
+	c.mu.Unlock()
+}
+
+// Get returns the value for the given key, ie: (value, true).
+// If the value does not exists it returns (nil, false)
+func (c *Context) Get(key string) (value interface{}, exists bool) {
+	c.mu.RLock()
+	value, exists = c.Keys[key]
+	c.mu.RUnlock()
+	return
+}

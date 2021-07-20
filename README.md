@@ -36,9 +36,12 @@ func main() {
 func Logger() xgin.HandlerFunc {
 	return func(c *xgin.Context) {
 		t := time.Now()
+		c.Set("k1", "v1")
 		c.Next()
 		latency := time.Since(t)
-		log.Print(latency)
+		log.Println(latency)
+		v, _ := c.Get("k1")
+		log.Println(v)
 	}
 }
 ```

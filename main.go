@@ -1,15 +1,25 @@
 package main
 
 import (
-	"srcrd/xlog"
-	"srcrd/xstrings"
+	"log"
+	"srcrd/xgin"
+	"time"
 )
 
 func main() {
-	var builder xstrings.Builder
-	builder.Write([]byte("hello"))
-	xlog.Print(builder.String())
+	r := xgin.Default()
+	r.Use(Logger())
+	r.GET("/", func(c *xgin.Context) {
+		c.String("hello")
+	})
+	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+}
 
-	s := xstrings.Join([]string{"1", "2"}, ",")
-	xlog.Print(s)
+func Logger() xgin.HandlerFunc {
+	return func(c *xgin.Context) {
+		t := time.Now()
+		c.Next()
+		latency := time.Since(t)
+		log.Print(latency)
+	}
 }

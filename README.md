@@ -4,7 +4,7 @@ std
 - [x] fmt.Print
 - [x] log.Print
 - [x] strings.Builder, strings.Join
-- [ ] bufio
+- [x] bufio(reader,writer)
 
 internal
 - [ ] netpoll
@@ -13,6 +13,7 @@ internal
 third party
 - [x] gin
 - [ ] zap
+- [ ] fasthttp
 
 
 
@@ -28,6 +29,13 @@ xlog.Print(builder.String())
 
 s := xstrings.Join([]string{"1", "2"}, ",")
 xlog.Print(s)
+
+r := xbufio.NewReader(os.Stdin)
+w := xbufio.NewWriter(os.Stdout)
+var b = make([]byte, 10)
+r.Read(b)
+w.Write(b)
+w.Flush()
 ```
 
 gin

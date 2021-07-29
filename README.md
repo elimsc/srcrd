@@ -6,6 +6,12 @@ std
 - [x] strings.Builder, strings.Join
 - [x] bufio(reader,writer)
 
+sync
+- [x] sync.Once
+- [x] sync.RWMutex
+- [ ] sync.WaitGroup
+- [ ] sync.Map
+
 internal
 - [ ] netpoll
 - [ ] memory

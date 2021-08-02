@@ -44,8 +44,9 @@ func NewCond(l Locker) *Cond {
 //
 func (c *Cond) Wait() {
 	// c.checker.check()
-	t := runtime_notifyListAdd(&c.notify)
+	t := runtime_notifyListAdd(&c.notify) // 等待计数器+1
 	c.L.Unlock()
+	// 获取当前 Goroutine 并将它追加到 Goroutine 通知链表的最末端, 然后调用 runtime.goparkunlock 将当前 Goroutine 陷入休眠
 	runtime_notifyListWait(&c.notify, t)
 	c.L.Lock()
 }

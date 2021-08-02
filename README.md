@@ -9,8 +9,10 @@ std
 sync
 - [x] sync.Once
 - [x] sync.RWMutex
-- [ ] sync.WaitGroup
+- [x] sync.WaitGroup
+- [x] sync.Cond
 - [ ] sync.Map
+- [ ] SingleFlight
 
 internal
 - [ ] netpoll
@@ -18,8 +20,8 @@ internal
 
 third party
 - [x] gin
+- [ ] fasthttp(goroutine pool)
 - [ ] zap
-- [ ] fasthttp
 
 
 
@@ -42,6 +44,42 @@ var b = make([]byte, 10)
 r.Read(b)
 w.Write(b)
 w.Flush()
+```
+
+sync.Map
+```go
+func main() {
+	var m xsync.Map
+	m.Store("1", "1")
+	m.Store("2", "2")
+	m.Store("3", "3")
+	// read:
+	// dirty: 1 2 3
+
+	for i := 0; i < 100; i++ {
+		m.Load("4")
+	}
+	// 发生dirty -> read
+	// read: 1 2 3
+	// dirty:
+
+	m.Store("4", "4")
+	// read: 1 2 3
+	// dirty: 1 2 3 4
+
+	m.Delete("2")
+	// read: 1 nil 3
+	// dirty: 1 nil 3 4
+
+	for i := 0; i < 100; i++ {
+		m.Load("4")
+	}
+	// 发生dirty -> read
+	// read: 1 nil 3 4
+	// dirty:
+
+	fmt.Println(m.Load("2")) // <nil> false
+}
 ```
 
 gin

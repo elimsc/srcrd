@@ -19,3 +19,12 @@ func runtime_SemacquireMutex(s *uint32, lifo bool, skipframes int)
 // skipframes is the number of frames to omit during tracing, counting from
 // runtime_Semrelease's caller.
 func runtime_Semrelease(s *uint32, handoff bool, skipframes int)
+
+// See runtime/sema.go for documentation.
+func runtime_notifyListAdd(l *notifyList) uint32
+
+// See runtime/sema.go for documentation.
+func runtime_notifyListWait(l *notifyList, t uint32)
+
+// See runtime/sema.go for documentation.
+func runtime_notifyListNotifyAll(l *notifyList)

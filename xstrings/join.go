@@ -13,7 +13,7 @@ func Join(elems []string, sep string) string {
 	}
 
 	var b Builder
-	b.Grow(n)
+	b.Grow(n) // 只分配1次内存
 	b.WriteString(elems[0])
 	for _, s := range elems[1:] {
 		b.WriteString(sep)

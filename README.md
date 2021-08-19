@@ -5,16 +5,20 @@ std
 - [x] log.Print
 - [x] strings.Builder, strings.Join
 - [x] bufio(reader,writer)
+- [ ] sort
+- [ ] heap
+- [x] strconv.Itoa, strconv.Atoi
 
 sync
 - [x] sync.Once
 - [x] sync.RWMutex
 - [x] sync.WaitGroup
 - [x] sync.Cond
-- [ ] sync.Map
+- [x] sync.Map
+- [ ] sync.Pool
 - [ ] SingleFlight
 
-internal
+internal/runtime
 - [ ] netpoll
 - [ ] memory
 
@@ -22,7 +26,7 @@ third party
 - [x] gin
 - [ ] fasthttp(goroutine pool)
 - [ ] zap
-
+- [ ] etcd
 
 
 
@@ -44,6 +48,10 @@ var b = make([]byte, 10)
 r.Read(b)
 w.Write(b)
 w.Flush()
+
+// strconv.Itoa, strconv.Itoa
+fmt.Println(xstrconv.Atoi("-11111111111111111"))
+fmt.Println(xstrconv.Itoa(11111111111))
 ```
 
 sync.Map

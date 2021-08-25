@@ -8,6 +8,7 @@ std
 - [ ] sort
 - [ ] heap
 - [x] strconv.Itoa, strconv.Atoi
+- [x] rand.Shuffle
 
 sync
 - [x] sync.Once

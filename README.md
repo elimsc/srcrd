@@ -25,7 +25,7 @@ internal/runtime
 
 third party
 - [x] gin
-- [ ] fasthttp(goroutine pool)
+- [x] fasthttp(workerpool)
 - [ ] zap
 - [ ] etcd
 
@@ -112,6 +112,13 @@ func Logger() xgin.HandlerFunc {
 		v, _ := c.Get("k1")
 		log.Println(v)
 	}
+}
+```
+
+fasthttp(workerpool)
+```go
+func main() {
+	xfasthttp.ListenAndServe(":3000")
 }
 ```
 

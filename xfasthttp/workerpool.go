@@ -204,7 +204,7 @@ func (wp *workerPool) getCh() *workerChan {
 	return ch
 }
 
-// 每处理完一次connection调用这个函数，更新workerChan的最后使用时间，把它放到ready的
+// 每处理完一次connection调用这个函数，更新workerChan的最后使用时间，把它放到ready的末尾
 func (wp *workerPool) release(ch *workerChan) bool {
 	ch.lastUseTime = time.Now()
 	wp.lock.Lock()
@@ -221,7 +221,7 @@ func (wp *workerPool) workerFunc(ch *workerChan) {
 	var c net.Conn
 
 	var err error
-	// 每个workerChan会循环获取connection并处理
+	// 每个workerChan都有一个goroutine会循环获取connection并处理
 	for c = range ch.ch {
 		if c == nil {
 			break

@@ -2,6 +2,8 @@ package netpoll
 
 import "unsafe"
 
+// Linux平台上的具体实现: epoll
+
 func epollcreate(size int32) int32
 func epollcreate1(flags int32) int32
 
@@ -74,7 +76,7 @@ func netpollBreak() {
 func netpollopen(fd uintptr, pd *pollDesc) int32 {
 	var ev epollevent
 	ev.events = _EPOLLIN | _EPOLLOUT | _EPOLLRDHUP | _EPOLLET
-	*(**pollDesc)(unsafe.Pointer(&ev.data)) = pd
+	*(**pollDesc)(unsafe.Pointer(&ev.data)) = pd // event.data指向pd
 	return -epollctl(epfd, _EPOLL_CTL_ADD, int32(fd), &ev)
 }
 

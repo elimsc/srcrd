@@ -20,7 +20,7 @@ sync
 - [ ] SingleFlight
 
 internal/runtime
-- [ ] netpoll
+- [x] netpoll
 - [ ] memory
 
 third party

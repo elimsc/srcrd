@@ -1,6 +1,6 @@
 package netpoll
 
-// 2. 如何向网络轮询器加入待监控的任务；
+// 2. 向网络轮询器加入待监控的任务
 //go:linkname poll_runtime_pollOpen internal/poll.runtime_pollOpen
 func poll_runtime_pollOpen(fd uintptr) (*pollDesc, int) {
 	pd := pollcache.alloc()

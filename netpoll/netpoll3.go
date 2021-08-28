@@ -24,7 +24,7 @@ func poll_runtime_pollWait(pd *pollDesc, mode int) int {
 	if GOOS == "solaris" || GOOS == "illumos" || GOOS == "aix" {
 		netpollarm(pd, mode)
 	}
-	for !netpollblock(pd, int32(mode), false) {
+	for !netpollblock(pd, int32(mode), false) { // 等待
 		errcode = netpollcheckerr(pd, int32(mode))
 		if errcode != pollNoError {
 			return errcode
@@ -36,25 +36,9 @@ func poll_runtime_pollWait(pd *pollDesc, mode int) int {
 	return pollNoError
 }
 
-func netpollcheckerr(pd *pollDesc, mode int32) int {
-	if pd.closing {
-		return pollErrClosing
-	}
-	if (mode == 'r' && pd.rd < 0) || (mode == 'w' && pd.wd < 0) {
-		return pollErrTimeout
-	}
-	// Report an event scanning error only on a read event.
-	// An error on a write event will be captured in a subsequent
-	// write call that is able to report a more specific error.
-	if mode == 'r' && pd.everr {
-		return pollErrNotPollable
-	}
-	return pollNoError
-}
-
 // returns true if IO is ready, or false if timedout or closed
 // waitio - wait only for completed IO, ignore errors
-// Goroutine 等待 I/O 事件的关键函数，它会使用运行时提供的 runtime.gopark 让出当前线程，将 Goroutine 转换到休眠状态并等待运行时的唤醒
+// Goroutine 等待 I/O 事件的关键函数，它会使用 runtime.gopark 让出当前线程，将 Goroutine 转换到休眠状态并等待运行时的唤醒
 func netpollblock(pd *pollDesc, mode int32, waitio bool) bool {
 	gpp := &pd.rg
 	if mode == 'w' {
@@ -91,7 +75,7 @@ func netpollblock(pd *pollDesc, mode int32, waitio bool) bool {
 }
 
 // 在netpoll_epoll.go中的nepoll中调用
-// 获取pd上等待的wg(写事件),rg(读事件)
+// 获取pd上等待的wg(写事件),rg(读事件), 并将G加入到toRun列表
 // netpollready is called by the platform-specific netpoll function.
 // It declares that the fd associated with pd is ready for I/O.
 // The toRun argument is used to build a list of goroutines to return
@@ -144,4 +128,20 @@ func netpollunblock(pd *pollDesc, mode int32, ioready bool) *g {
 			return (*g)(unsafe.Pointer(old))
 		}
 	}
+}
+
+func netpollcheckerr(pd *pollDesc, mode int32) int {
+	if pd.closing {
+		return pollErrClosing
+	}
+	if (mode == 'r' && pd.rd < 0) || (mode == 'w' && pd.wd < 0) {
+		return pollErrTimeout
+	}
+	// Report an event scanning error only on a read event.
+	// An error on a write event will be captured in a subsequent
+	// write call that is able to report a more specific error.
+	if mode == 'r' && pd.everr {
+		return pollErrNotPollable
+	}
+	return pollNoError
 }

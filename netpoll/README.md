@@ -3,9 +3,9 @@
 
 如何做到代码同步而底层异步的?  
 因为Go中read, write, accept等阻塞时，是G的park，而不是物理线程的阻塞。Go通过netpoll调用操作系统的epollwait获取有事件发生的socket，然后获取socket对应的G，然后将G加入到全局可运行队列中。  
-也就是说，操作返回EAGIN时就park当前G，G的唤醒(即加入到全局可运行队列)由守护线程中一直运行的netpoll来负责。
+也就是说，操作返回EAGIN时就park当前G，G的唤醒(即加入到全局可运行队列)由`守护线程sysmon`中一直运行的netpoll来负责。
 
-通过netpoll轮询可运行的G
+sysmon中通过netpoll轮询可运行的G
 ```go
 n := epollwait(epfd, &events[0], int32(len(events)), waitms)
 for i := int32(0); i < n; i++ {

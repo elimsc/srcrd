@@ -17,7 +17,8 @@ sync
 - [x] sync.Cond
 - [x] sync.Map
 - [ ] sync.Pool
-- [ ] SingleFlight
+- [x] SingleFlight
+- [ ] ErrGroup
 
 internal/runtime
 - [x] netpoll
@@ -88,6 +89,31 @@ func main() {
 	// dirty:
 
 	fmt.Println(m.Load("2")) // <nil> false
+}
+```
+
+singleFlight
+```go
+func main() {
+	var sf xsync1.SingleFlightGroup
+	var v1, v2 interface{}
+	go func() {
+		v1, _, _ = sf.Do("key", func() (interface{}, error) {
+			fmt.Println(1)
+			return 1, nil
+		})
+	}()
+
+	go func() {
+		v2, _, _ = sf.Do("key", func() (interface{}, error) {
+			fmt.Println(2)
+			return 2, nil
+		})
+	}()
+
+	time.Sleep(1 * time.Second)
+
+	fmt.Println(v1, v2) // 1, 1
 }
 ```
 

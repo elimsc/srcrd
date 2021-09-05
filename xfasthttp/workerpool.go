@@ -42,6 +42,19 @@ type workerChan struct {
 	ch          chan net.Conn
 }
 
+// 处理TCP连接
+// 1. 获取一个channel
+// 2. 把连接发给这个channel
+// 3. 每个channel都有一个goroutine在不断的读这个channel获取TCP连接
+func (wp *workerPool) Serve(c net.Conn) bool {
+	ch := wp.getCh()
+	if ch == nil {
+		return false
+	}
+	ch.ch <- c
+	return true
+}
+
 // 初始化workerPool, 并定期(10s)清除闲置的workerChan
 func (wp *workerPool) Start() {
 	if wp.stopCh != nil {
@@ -157,15 +170,6 @@ func (wp *workerPool) clean(scratch *[]*workerChan) {
 		tmp[i].ch <- nil
 		tmp[i] = nil
 	}
-}
-
-func (wp *workerPool) Serve(c net.Conn) bool {
-	ch := wp.getCh()
-	if ch == nil {
-		return false
-	}
-	ch.ch <- c
-	return true
 }
 
 // 获取一个workerChan来处理connection, 每新增一个workerChan就会运行一个goroutine处理它上面的连接

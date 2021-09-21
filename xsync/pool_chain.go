@@ -121,6 +121,7 @@ func (c *poolChain) popTail() (interface{}, bool) {
 		// to the next dequeue. Try to drop it from the chain
 		// so the next pop doesn't have to look at the empty
 		// dequeue again.
+		// 因为d已经没有数据了，所以置tail为d2，并删除d2的上一个节点
 		if atomic.CompareAndSwapPointer((*unsafe.Pointer)(unsafe.Pointer(&c.tail)), unsafe.Pointer(d), unsafe.Pointer(d2)) {
 			// We won the race. Clear the prev pointer so
 			// the garbage collector can collect the empty

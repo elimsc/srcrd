@@ -7,6 +7,8 @@ import (
 	"unsafe"
 )
 
+// 推荐阅读: https://www.luozhiyun.com/archives/416
+
 // A Pool is a set of temporary objects that may be individually saved and
 // retrieved.
 //

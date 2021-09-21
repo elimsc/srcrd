@@ -158,8 +158,10 @@ func (d *poolDequeue) popTail() (interface{}, bool) {
 		// above) and increment tail. If this succeeds, then
 		// we own the slot at tail.
 		ptrs2 := d.pack(head, tail+1)
+		// 通过CAS移动headTail的位置
 		if atomic.CompareAndSwapUint64(&d.headTail, ptrs, ptrs2) {
 			// Success.
+			// 获取tail位置对象
 			slot = &d.vals[tail&uint32(len(d.vals)-1)]
 			break
 		}

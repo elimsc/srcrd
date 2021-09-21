@@ -16,9 +16,10 @@ sync
 - [x] sync.WaitGroup
 - [x] sync.Cond
 - [x] sync.Map
-- [ ] sync.Pool
+- [x] sync.Pool
 - [x] SingleFlight
-- [ ] ErrGroup
+- [x] ErrGroup
+- [ ] Semaphore
 
 internal/runtime
 - [x] netpoll
